@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Overview</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .profile-overview {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        .profile-picture {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-picture img {
+            border-radius: 50%;
+            border: 4px solid #007bff;
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+        }
+        .profile-details {
+            flex: 2;
+        }
+        .profile-details label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #007bff;
+        }
+        .profile-details p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .profile-details a {
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: bold;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .button-container a {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Profile Overview</h1>
+    <div class="profile-overview">
+        <div class="profile-picture">
+            {% if profile %}
+            <img src="/uploads/{{ profile.profile_picture }}" alt="Profile Picture">
+            {% else %}
+            <p>No profile picture available.</p>
+            {% endif %}
+        </div>
+        <div class="profile-details">
+            {% if profile %}
+            <p><label>Name:</label> {{ profile.name }}</p>
+            <p><label>Age:</label> {{ profile.age }}</p>
+            <p><label>Contact No:</label> {{ profile.contact_no }}</p>
+            <p><label>Location:</label> {{ profile.location }}</p>
+            <p><label>Job Preference 1:</label> {{ profile.job_preference1 }}</p>
+            <p><label>Job Preference 2:</label> {{ profile.job_preference2 }}</p>
+            <p><label>Job Preference 3:</label> {{ profile.job_preference3 }}</p>
+            <p><label>Working Hours:</label> {{ profile.working_hours }}</p>
+            <p><label>Bio:</label> {{ profile.bio }}</p>
+            <p><label>ID Proof:</label> <a href="/uploads/{{ profile.id_proof }}" target="_blank">View ID Proof</a></p>
+            {% else %}
+            <p>No profile data available yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <a href="/">Edit Profile</a>
+    </div>
+</div>
+
+</body>
+</html>
