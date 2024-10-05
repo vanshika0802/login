@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empower Her - Profile Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf4fc;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Empower Her - Personalize Your Profile</h1>
+<form id="profile-form" action="/upload-profile" method="POST" enctype="multipart/form-data">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+
+    <label for="contact_no">Contact Number:</label>
+    <input type="text" id="contact_no" name="contact_no" required>
+
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="job_preference1">Job Preference 1:</label>
+    <input type="text" id="job_preference1" name="job_preference1" required>
+
+    <label for="job_preference2">Job Preference 2:</label>
+    <input type="text" id="job_preference2" name="job_preference2" required>
+
+    <label for="job_preference3">Job Preference 3:</label>
+    <input type="text" id="job_preference3" name="job_preference3" required>
+
+    <label for="working_hours">Preferred Working Hours:</label>
+    <select id="working_hours" name="working_hours">
+        <option value="part-time">Part-Time</option>
+        <option value="full-time">Full-Time</option>
+    </select>
+
+    <label for="bio">Bio:</label>
+    <textarea id="bio" name="bio" placeholder="Tell us about yourself..." required></textarea>
+
+    <label for="profile_picture">Upload Profile Picture:</label>
+    <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required>
+
+    <label for="id_proof">Upload ID Proof (PDF, JPG, PNG):</label>
+    <input type="file" id="id_proof" name="id_proof" accept=".pdf, .jpg, .jpeg, .png" required>
+
+    <button type="submit">Submit Profile</button>
+</form>
+
+</body>
+</html>
