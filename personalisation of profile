@@ -1,0 +1,103 @@
+from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask_cors import CORS
+import os
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+CORS(app)
+
+# Set up the upload folder and allowed file extensions
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max file size 16MB
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
+
+# In-memory storage for profiles
+profiles = []
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/')
+def home():
+    return render_template('index2.html')
+
+@app.route('/upload-profile', methods=['POST'])
+def upload_profile():
+    try:
+        # Get form data
+        name = request.form.get('name')
+        age = int(request.form.get('age'))
+        contact_no = request.form.get('contact_no')
+        location = request.form.get('location')
+        job_preference1 = request.form.get('job_preference1')
+        job_preference2 = request.form.get('job_preference2')
+        job_preference3 = request.form.get('job_preference3')
+        working_hours = request.form.get('working_hours')
+        bio = request.form.get('bio')
+
+        profile_picture = request.files.get('profile_picture')
+        id_proof = request.files.get('id_proof')
+
+        # Validation checks
+        if len(contact_no) != 10 or not contact_no.isdigit():
+            return jsonify({'error': 'Invalid phone number. It should be exactly 10 digits.'}), 400
+
+        if age <= 20 or age >= 50:
+            return jsonify({'error': 'Age must be between 21 and 49.'}), 400
+
+        if not profile_picture or not id_proof:
+            return jsonify({'error': 'Both profile picture and ID proof are required.'}), 400
+
+        # Check profile picture size (between 300KB and 3MB)
+        profile_picture_size = len(profile_picture.read())
+        if profile_picture_size < 300 * 1024 or profile_picture_size > 3 * 1024 * 1024:
+            return jsonify({'error': 'Profile picture must be between 300KB and 3MB.'}), 400
+        profile_picture.seek(0)  # Reset file pointer to the beginning
+
+        # Save profile picture and ID proof
+        if profile_picture and allowed_file(profile_picture.filename):
+            profile_filename = secure_filename(profile_picture.filename)
+            profile_picture.save(os.path.join(app.config['UPLOAD_FOLDER'], profile_filename))
+        else:
+            return jsonify({'error': 'Invalid profile picture format.'}), 400
+
+        if id_proof and allowed_file(id_proof.filename):
+            id_proof_filename = secure_filename(id_proof.filename)
+            id_proof.save(os.path.join(app.config['UPLOAD_FOLDER'], id_proof_filename))
+        else:
+            return jsonify({'error': 'Invalid ID proof format.'}), 400
+
+        # Store profile information in memory (or a database)
+        profile_data = {
+            'name': name,
+            'age': age,
+            'contact_no': contact_no,
+            'location': location,
+            'job_preference1': job_preference1,
+            'job_preference2': job_preference2,
+            'job_preference3': job_preference3,
+            'working_hours': working_hours,
+            'bio': bio,
+            'profile_picture': profile_filename,
+            'id_proof': id_proof_filename
+        }
+        profiles.append(profile_data)
+
+        # Redirect to overview page
+        return redirect(url_for('profile_overview'))
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/profile-overview', methods=['GET'])
+def profile_overview():
+    if profiles:
+        return render_template('overview1.html', profile=profiles[-1])  # Return the most recent profile
+    else:
+        return render_template('overview1.html', profile=None)  # No profiles yet
+
+if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    app.run(debug=True)
